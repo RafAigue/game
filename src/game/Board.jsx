@@ -8,9 +8,10 @@ import './Board.css'
 export default function Board() {
     const canvasRef = useRef("board")
     const [score, setScore] = useState(0)
+    const [maxScore, setMaxScore] = useState(0)
     const [win, setWin] = useState(false)
     const [lose, setLose] = useState(false)
-    const [gameKey, setGameKey] = useState(true)
+    const [gameRestart, setGameRestart] = useState(true)
 
     const ball = new Ball()
     const pad = new Pad()
@@ -18,7 +19,11 @@ export default function Board() {
     blocks.initializeBlocks()
 
     const addScore = (add) => {
-        setScore(prevScore => prevScore + add)
+        setScore(prevScore => {
+            const newScore = prevScore + add
+            setMaxScore(current => Math.max(current, newScore))
+            return newScore
+        })
     }
 
     const resetGame = () => {
@@ -26,7 +31,7 @@ export default function Board() {
         setScore(0)
         setWin(false)
         setLose(false)
-        setGameKey(prev => !prev)
+        setGameRestart(prev => !prev)
     }
 
     useEffect(() => {
@@ -79,7 +84,7 @@ export default function Board() {
             window.removeEventListener('mousemove', handleMouseMove)
             cancelAnimationFrame(animationFrameId)
         }
-    }, [gameKey])
+    }, [gameRestart])
 
     const game = <canvas id="board" ref={canvasRef} height={CANVAS_HEIGHT} width={CANVAS_WIDTH} />
 
@@ -88,6 +93,7 @@ export default function Board() {
             {!lose && !win ? (
                 <main className="game-main">
                     <h2 className="score">SCORE: {score}</h2>
+                    <h2 className="max-score">MAX SCORE: {maxScore}</h2>
                     {game}
                 </main>
             ) : (
@@ -97,6 +103,7 @@ export default function Board() {
                             {lose ? "You lose!" : "You win!"}
                         </h2>
                         <h3 className="modal-score">SCORE: {score}</h3>
+                        <h4>MAX SCORE: {maxScore}</h4>
                         <button className="modal-button" onClick={resetGame}>
                             Play again
                         </button>
