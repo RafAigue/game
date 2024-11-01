@@ -19,14 +19,8 @@ export default function Board() {
     const blocks = new Blocks()
     blocks.initializeBlocks()
 
-    const handleLose = (canvas) => {
-        canvas = null
+    const handleLose = () => {
         setLose(true)
-    }
-
-    const handleWin = (canvas) => {
-        canvas = null
-        setWin(true)
     }
 
     const addScore = (add) => {
@@ -64,7 +58,7 @@ export default function Board() {
             ball.checkCanvasCollisions(handleLose, ctx)
             ball.checkPadCollision(addScore, pad)
             
-            blocks.checkAllDestroyed() && handleWin(canvas)
+            blocks.checkAllDestroyed() && setWin(true)
 
             ball.move()
 
@@ -89,7 +83,7 @@ export default function Board() {
                             <h2>SCORE: {score}</h2>
                             {game}
                         </main>
-                    :
+                        :
                         <div>
                             <h2>YOU WIN!</h2>
                             <button onClick={resetGame}>Play again</button>
