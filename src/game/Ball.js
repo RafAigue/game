@@ -1,9 +1,9 @@
 import { BALL_RADIUS, BALL_INITIAL_SPEED, BALL_DIRECTION, CANVAS_WIDTH, CANVAS_HEIGHT, SCORE_PAD, PAD_SPEED } from './constants'
 
 export class Ball {
-    constructor(x, y) {
-        this.pos_x = 100
-        this.pos_y = 500
+    constructor() {
+        this.pos_x = CANVAS_WIDTH / 2 + Math.floor(Math.random() * 300) * (Math.random() > 0.5 ? 1 : -1)
+        this.pos_y = CANVAS_HEIGHT / 2 + Math.floor(Math.random() * 150) * (Math.random() > 0.5 ? 1 : -1)
         this.speed = BALL_INITIAL_SPEED
         this.direction = BALL_DIRECTION
         // this.angle = 0

@@ -7,7 +7,7 @@ export const BALL_RADIUS = 16
 export const BALL_INITIAL_SPEED = 2
 export const BALL_DIRECTION = {
     DOWN: false,
-    RIGHT: true
+    RIGHT: Math.random() > 0.5 ? true : false
 }
 
 // Pad

@@ -11,11 +11,8 @@ export default function Board() {
     const [lose, setLose] = useState(false)
     const [gameKey, setGameKey] = useState(0)
 
-    let x = CANVAS_WIDTH / 2
-    let y = CANVAS_HEIGHT / 2
-
-    const ball = new Ball(x, y)
-    const pad = new Pad(x)
+    const ball = new Ball()
+    const pad = new Pad()
     const blocks = new Blocks()
     blocks.initializeBlocks()
 
