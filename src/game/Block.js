@@ -107,8 +107,12 @@ export class Blocks {
         this.blocks.forEach(block => block.draw(ctx))
     }
 
-    checkCollision(addScore, ball) {
-        this.blocks.forEach(block => block.checkCollision(addScore, ball))
+    checkCollision(addScore, balls) {
+        this.blocks.forEach(block => {
+            balls.forEach(ball => {
+                block.checkCollision(addScore, ball)
+            })
+        })
     }
 
     checkAllDestroyed() {

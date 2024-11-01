@@ -1,13 +1,14 @@
-import { BALL_RADIUS, BALL_INITIAL_SPEED, BALL_DIRECTION, CANVAS_WIDTH, CANVAS_HEIGHT, SCORE_PAD, PAD_SPEED } from './constants'
+import { BALL_RADIUS, BALL_INITIAL_SPEED, CANVAS_WIDTH, CANVAS_HEIGHT, SCORE_PAD, PAD_SPEED } from './constants'
 
 export class Ball {
     constructor() {
         this.pos_x = CANVAS_WIDTH / 2 + Math.floor(Math.random() * 300) * (Math.random() > 0.5 ? 1 : -1)
         this.pos_y = CANVAS_HEIGHT / 2 + Math.floor(Math.random() * 100) * (Math.random() > 0.5 ? 1 : -1)
         this.speed = BALL_INITIAL_SPEED
-        this.direction = BALL_DIRECTION
-        // this.angle = 0
-        // Idea: Add a speed multiplier that increases the speed of the ball as the score increases
+        this.direction = {
+            DOWN: true,
+            RIGHT: Math.random() > 0.5
+        }
     }
 
     draw(ctx) {
@@ -60,5 +61,24 @@ export class Ball {
 
     increaseSpeed(speed) {
         this.speed += speed
+    }
+}
+
+export class Balls {
+    constructor() {
+        this.balls = [new Ball()]
+    }
+
+    addBall() {
+        this.balls.push(new Ball())
+    }
+
+    draw(ctx, pad, handleLose, addScore) {
+        this.balls.forEach(ball => {
+            ball.draw(ctx)
+            ball.checkCanvasCollisions(handleLose, ctx)
+            ball.checkPadCollision(addScore, pad)
+            ball.move()
+        })
     }
 }

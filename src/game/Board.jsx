@@ -1,8 +1,8 @@
 import { React, useState, useRef, useEffect } from 'react'
-import { CANVAS_WIDTH, CANVAS_HEIGHT, PAD_WIDTH } from './constants'
-import { Ball } from './Ball'
+import { CANVAS_WIDTH, CANVAS_HEIGHT, PAD_WIDTH, BALL_NEW_BALL_INTERVAL } from './constants'
 import { Pad } from './Pad'
 import { Blocks } from './Block'
+import { Balls } from './Ball'
 import './Board.css'
 
 export default function Board() {
@@ -13,9 +13,9 @@ export default function Board() {
     const [lose, setLose] = useState(false)
     const [gameRestart, setGameRestart] = useState(true)
 
-    const ball = new Ball()
     const pad = new Pad()
     const blocks = new Blocks()
+    let balls = new Balls()
     blocks.initializeBlocks()
 
     const addScore = (add) => {
@@ -27,7 +27,7 @@ export default function Board() {
     }
 
     const resetGame = () => {
-        ball.direction.DOWN = false
+        balls = new Balls()
         setScore(0)
         setWin(false)
         setLose(false)
@@ -62,11 +62,9 @@ export default function Board() {
 
             pad.draw(ctx)
             blocks.draw(ctx)
-            blocks.checkCollision(addScore, ball)
+            blocks.checkCollision(addScore, balls.balls)
 
-            ball.draw(ctx)
-            ball.checkCanvasCollisions(handleLose, ctx)
-            ball.checkPadCollision(addScore, pad)
+            balls.draw(ctx, pad, handleLose, addScore)
             
             if (blocks.checkAllDestroyed()) {
                 isGameRunning = false
@@ -74,7 +72,6 @@ export default function Board() {
                 return
             }
 
-            ball.move()
             animationFrameId = requestAnimationFrame(render)
         }
 
@@ -85,6 +82,16 @@ export default function Board() {
             cancelAnimationFrame(animationFrameId)
         }
     }, [gameRestart])
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            if (!lose && !win) {
+                balls.addBall()
+            }
+        }, BALL_NEW_BALL_INTERVAL)
+
+        return () => clearInterval(timer)
+    }, [gameRestart, lose, win])
 
     const game = <canvas id="board" ref={canvasRef} height={CANVAS_HEIGHT} width={CANVAS_WIDTH} />
 
