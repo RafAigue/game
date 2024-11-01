@@ -3,6 +3,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT, PAD_WIDTH } from './constants'
 import { Ball } from './Ball'
 import { Pad } from './Pad'
 import { Blocks } from './Block'
+import './Board.css'
 
 export default function Board() {
     const canvasRef = useRef("board")
@@ -83,29 +84,25 @@ export default function Board() {
     const game = <canvas id="board" ref={canvasRef} height={CANVAS_HEIGHT} width={CANVAS_WIDTH} />
 
     return (
-        <div>
-            {!lose ?
-                <div>
-                    {!win ?
-                        <main>
-                            <h2>SCORE: {score}</h2>
-                            {game}
-                        </main>
-                        :
-                        <div>
-                            <h2>YOU WIN!</h2>
-                            <h3>SCORE: {score}</h3>
-                            <button onClick={resetGame}>Play again</button>
-                        </div>
-                    }                    
+        <div className="game-container">
+            {!lose && !win ? (
+                <main className="game-main">
+                    <h2 className="score">SCORE: {score}</h2>
+                    {game}
+                </main>
+            ) : (
+                <div className="modal-overlay">
+                    <div className="modal">
+                        <h2 className={`modal-title ${lose ? "lose" : "win"}`}>
+                            {lose ? "You lose!" : "You win!"}
+                        </h2>
+                        <h3 className="modal-score">SCORE: {score}</h3>
+                        <button className="modal-button" onClick={resetGame}>
+                            Play again
+                        </button>
+                    </div>
                 </div>
-                :
-                <div>
-                    <h2>YOU LOSE!</h2>
-                    <h3>SCORE: {score}</h3>
-                    <button onClick={resetGame}>Play again</button>
-                </div>
-            }
+            )}
         </div>
     )
 }

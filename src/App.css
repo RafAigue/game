@@ -1,3 +1,7 @@
+#root {
+  font: 1em Roboto, sans-serif;
+}
+
 #board {
   background-color: #1e1e1e;
 }
