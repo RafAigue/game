@@ -3,7 +3,7 @@ import { BLOCK_WIDTH, BLOCK_HEIGHT, BLOCK_COLORS, CANVAS_WIDTH, BALL_RADIUS, SCO
 export class Block {
     constructor(x) {
         this.x = x
-        this.y = 150
+        this.y = 100
         this.width = BLOCK_WIDTH
         this.height = BLOCK_HEIGHT
         this.color = BLOCK_COLORS[Math.floor(Math.random() * BLOCK_COLORS.length)]

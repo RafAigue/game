@@ -4,7 +4,7 @@ export const CANVAS_HEIGHT = 800
 
 // Ball
 export const BALL_RADIUS = 16
-export const BALL_INITIAL_SPEED = 5
+export const BALL_INITIAL_SPEED = 8
 export const BALL_NEW_BALL_INTERVAL = 5000
 
 // Pad

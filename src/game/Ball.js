@@ -53,7 +53,6 @@ export class Ball {
     checkPadCollision(addScore, pad) {
         if (this.pos_y + BALL_RADIUS >= pad.y && this.pos_x + BALL_RADIUS >= pad.x && this.pos_x - BALL_RADIUS <= pad.x + pad.width) {
             this.direction.DOWN = false
-            pad.angleCollision(this.pos_x)
             addScore(SCORE_PAD)
             this.increaseSpeed(PAD_SPEED)
         }            
