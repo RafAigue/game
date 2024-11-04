@@ -1,7 +1,8 @@
 import { React, useState, useRef, useEffect } from 'react'
-import { CANVAS_WIDTH, CANVAS_HEIGHT, PAD_WIDTH } from './constants'
+import { CANVAS_WIDTH, CANVAS_HEIGHT, PAD_WIDTH, PILL_SPEED } from './constants'
 import Pad from './Pad'
 import Ball from './Ball'
+import Pill from './Pill'
 import { Modal } from './Modal'
 import './Board.css'
 
@@ -13,6 +14,8 @@ export default function Board() {
     const startTimeRef = useRef(null)
     const [gameRestart, setGameRestart] = useState(true)
     const [isGameRunning, setIsGameRunning] = useState(true)
+    let pill = new Pill()
+    const pillIntervalRef = useRef(null)
 
     let animationFrameId
 
@@ -21,6 +24,7 @@ export default function Board() {
         setGameRestart(prev => !prev)
         setIsGameRunning(true)
         startTimeRef.current = Date.now()
+        pill = new Pill()
     }
 
     const handleGameOver = () => {
@@ -52,7 +56,23 @@ export default function Board() {
             pad.move(mouseX - PAD_WIDTH / 2)
         }
 
+        const handleMouseClick = (event) => {
+            const rect = canvas.getBoundingClientRect()
+            const mouseX = event.clientX - rect.left
+            const mouseY = event.clientY - rect.top
+            if (pill?.isClicked(mouseX, mouseY)) {
+                ball.speed -= PILL_SPEED
+                pill = null
+                clearInterval(pillIntervalRef.current)
+                pillIntervalRef.current = setInterval(
+                    () => pill = new Pill(), 
+                    Math.floor(Math.random() * 10000) + 5000
+                )
+            }
+        }
+
         window.addEventListener('mousemove', handleMouseMove)
+        window.addEventListener('click', handleMouseClick)
 
         function render() {
             if (!isGameRunning) return
@@ -64,6 +84,7 @@ export default function Board() {
             ball.checkCanvasCollisions(handleGameOver, ctx)
             ball.checkPadCollision(pad)
             ball.move()
+            pill?.draw(ctx)
 
             animationFrameId = requestAnimationFrame(render)
         }
@@ -72,7 +93,9 @@ export default function Board() {
 
         return () => {
             window.removeEventListener('mousemove', handleMouseMove)
+            window.removeEventListener('click', handleMouseClick)
             cancelAnimationFrame(animationFrameId)
+            clearInterval(pillIntervalRef.current)
         }
     }, [gameRestart, isGameRunning])
 
