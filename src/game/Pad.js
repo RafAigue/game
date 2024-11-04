@@ -1,6 +1,6 @@
 import { PAD_Y, PAD_WIDTH, PAD_HEIGHT, CANVAS_WIDTH, PAD_COLOR } from './constants'
 
-export class Pad {
+export default class Pad {
     constructor() {
         this.x = CANVAS_WIDTH / 2
         this.y = PAD_Y

@@ -1,6 +1,6 @@
-import { BALL_RADIUS, BALL_INITIAL_SPEED, CANVAS_WIDTH, CANVAS_HEIGHT, SCORE_PAD, PAD_SPEED, BALL_COLOR } from './constants'
+import { BALL_RADIUS, BALL_INITIAL_SPEED, CANVAS_WIDTH, CANVAS_HEIGHT, PAD_SPEED, BALL_COLOR } from './constants'
 
-export class Ball {
+export default class Ball {
     constructor() {
         this.pos_x = CANVAS_WIDTH / 2 + Math.floor(Math.random() * 300) * (Math.random() > 0.5 ? 1 : -1)
         this.pos_y = CANVAS_HEIGHT / 2 + Math.floor(Math.random() * 100) * (Math.random() > 0.5 ? 1 : -1)
@@ -43,41 +43,17 @@ export class Ball {
         if (this.pos_y - BALL_RADIUS <= 0) this.direction.DOWN = true
     }
 
-    checkCanvasBottomCollision(handleLose,  ctx) {
+    checkCanvasBottomCollision(handleGameOver,  ctx) {
         if (this.pos_y + BALL_RADIUS >= CANVAS_HEIGHT) {
             ctx.reset()
-            handleLose()
+            handleGameOver()
         }
     }
 
-    checkPadCollision(addScore, pad) {
+    checkPadCollision(pad) {
         if (this.pos_y + BALL_RADIUS >= pad.y && this.pos_x + BALL_RADIUS >= pad.x && this.pos_x - BALL_RADIUS <= pad.x + pad.width) {
             this.direction.DOWN = false
-            addScore(SCORE_PAD)
-            this.increaseSpeed(PAD_SPEED)
+            this.speed += PAD_SPEED
         }            
-    }
-
-    increaseSpeed(speed) {
-        this.speed += speed
-    }
-}
-
-export class Balls {
-    constructor() {
-        this.balls = [new Ball()]
-    }
-
-    addBall() {
-        this.balls.push(new Ball())
-    }
-
-    draw(ctx, pad, handleLose, addScore) {
-        this.balls.forEach(ball => {
-            ball.draw(ctx)
-            ball.checkCanvasCollisions(handleLose, ctx)
-            ball.checkPadCollision(addScore, pad)
-            ball.move()
-        })
     }
 }

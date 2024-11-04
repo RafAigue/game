@@ -19,17 +19,5 @@ export const BALL_COLOR = RED
 export const PAD_Y = CANVAS_HEIGHT - 50
 export const PAD_WIDTH = 200
 export const PAD_HEIGHT = 10
-export const PAD_SPEED = 0.2
+export const PAD_SPEED = 1
 export const PAD_COLOR = GREEN
-
-// Block
-export const BLOCK_WIDTH = 80
-export const BLOCK_HEIGHT = 20
-export const BLOCK_SPACING = 50
-export const BLOCK_COLORS = [BLUE, GREEN, RED, YELLOW, PURPLE]
-export const BLOCK_SPEED = 0.5
-export const BLOCK_REVIVAL_TIME = 3000
-
-// Score
-export const SCORE_PAD = 1
-export const SCORE_BLOCK = 10
