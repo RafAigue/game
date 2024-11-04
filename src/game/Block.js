@@ -1,4 +1,4 @@
-import { BLOCK_WIDTH, BLOCK_HEIGHT, BLOCK_COLORS, CANVAS_WIDTH, BALL_RADIUS, SCORE_BLOCK, BLOCK_SPACING, BLOCK_SPEED } from './constants'
+import { BLOCK_WIDTH, BLOCK_HEIGHT, BLOCK_COLORS, CANVAS_WIDTH, BALL_RADIUS, SCORE_BLOCK, BLOCK_SPACING, BLOCK_SPEED, BLOCK_REVIVAL_TIME } from './constants'
 
 export class Block {
     constructor(x) {
@@ -26,6 +26,9 @@ export class Block {
             this.checkBottomCollision(ball))) {
             this.destroyed = true
             addScore(SCORE_BLOCK)
+            setTimeout(() => {
+                this.destroyed = false
+            }, BLOCK_REVIVAL_TIME)
         }
     }
 

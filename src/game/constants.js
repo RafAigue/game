@@ -23,3 +23,4 @@ export const BLOCK_HEIGHT = 20
 export const BLOCK_SPACING = 50
 export const BLOCK_COLORS = ['blue', 'green', 'red', 'yellow', 'purple']
 export const BLOCK_SPEED = 0.5
+export const BLOCK_REVIVAL_TIME = 2000
