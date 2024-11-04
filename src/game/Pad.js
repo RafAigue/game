@@ -1,4 +1,4 @@
-import { PAD_Y, PAD_WIDTH, PAD_HEIGHT, CANVAS_WIDTH } from './constants'
+import { PAD_Y, PAD_WIDTH, PAD_HEIGHT, CANVAS_WIDTH, PAD_COLOR } from './constants'
 
 export class Pad {
     constructor() {
@@ -9,7 +9,7 @@ export class Pad {
     }
 
     draw(ctx) {
-        ctx.fillStyle = 'green'
+        ctx.fillStyle = PAD_COLOR
         ctx.fillRect(this.x, this.y, this.width, this.height)
         ctx.stroke()
     }

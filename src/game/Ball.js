@@ -1,4 +1,4 @@
-import { BALL_RADIUS, BALL_INITIAL_SPEED, CANVAS_WIDTH, CANVAS_HEIGHT, SCORE_PAD, PAD_SPEED } from './constants'
+import { BALL_RADIUS, BALL_INITIAL_SPEED, CANVAS_WIDTH, CANVAS_HEIGHT, SCORE_PAD, PAD_SPEED, BALL_COLOR } from './constants'
 
 export class Ball {
     constructor() {
@@ -14,7 +14,7 @@ export class Ball {
     draw(ctx) {
         ctx.beginPath()
         ctx.arc(this.pos_x, this.pos_y, BALL_RADIUS, 0, 2 * Math.PI)
-        ctx.fillStyle = 'red'
+        ctx.fillStyle = BALL_COLOR
         ctx.fill()
         ctx.stroke()
     }
