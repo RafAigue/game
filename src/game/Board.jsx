@@ -4,6 +4,7 @@ import { Pad } from './Pad'
 import { Blocks } from './Block'
 import { Balls } from './Ball'
 import './Board.css'
+import { Modal } from './Modal'
 
 export default function Board() {
     const canvasRef = useRef('board')
@@ -104,18 +105,13 @@ export default function Board() {
                     {game}
                 </main>
             ) : (
-                <div className='modal-overlay'>
-                    <div className='modal'>
-                        <h2 className={`modal-title ${lose ? 'lose' : 'win'}`}>
-                            {lose ? 'You lose!' : 'You win!'}
-                        </h2>
-                        <h3 className='modal-score'>SCORE: {score}</h3>
-                        <h4>MAX SCORE: {maxScore}</h4>
-                        <button className='modal-button' onClick={resetGame}>
-                            Play again
-                        </button>
-                    </div>
-                </div>
+                <Modal
+                    win={win}
+                    lose={lose}
+                    score={score}
+                    maxScore={maxScore}
+                    resetGame={resetGame}
+                />
             )}
         </div>
     )

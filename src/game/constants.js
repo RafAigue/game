@@ -28,7 +28,7 @@ export const BLOCK_HEIGHT = 20
 export const BLOCK_SPACING = 50
 export const BLOCK_COLORS = [BLUE, GREEN, RED, YELLOW, PURPLE]
 export const BLOCK_SPEED = 0.5
-export const BLOCK_REVIVAL_TIME = 2000
+export const BLOCK_REVIVAL_TIME = 3000
 
 // Score
 export const SCORE_PAD = 1
