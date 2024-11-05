@@ -1,4 +1,4 @@
-import { PILL_RADIUS, CANVAS_WIDTH, CANVAS_HEIGHT, BLUE, GREEN, PURPLE } from './constants'
+import { PILL_RADIUS, CANVAS_WIDTH, CANVAS_HEIGHT, BLUE, GREEN, PURPLE } from '../../constants'
 
 export default class Pill {
     constructor() {

@@ -1,4 +1,4 @@
-import { BALL_RADIUS, BALL_INITIAL_SPEED, CANVAS_WIDTH, CANVAS_HEIGHT, PAD_SPEED, BALL_COLOR } from './constants'
+import { BALL_RADIUS, BALL_INITIAL_SPEED, CANVAS_WIDTH, CANVAS_HEIGHT, PAD_SPEED, BALL_COLOR } from '../../constants'
 
 export default class Ball {
     constructor() {

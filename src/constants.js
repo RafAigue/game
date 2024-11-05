@@ -6,9 +6,15 @@ export const YELLOW = 'yellow'
 export const PURPLE = 'purple'
 export const WHITE = 'white'
 
-//Canvas
-export const CANVAS_WIDTH = window.innerWidth
-export const CANVAS_HEIGHT = window.innerHeight - 118
+// Canvas
+let canvasWidth = window.innerWidth * 0.8
+let canvasHeight = window.innerHeight * 0.8
+export const CANVAS_WIDTH = canvasWidth < 1280 ? 1280 : canvasWidth
+export const CANVAS_HEIGHT = canvasHeight < 720 ? 720 : canvasHeight
+
+// Games
+export const GAME_SINGLE_PLAYER = 'single-player'
+export const GAME_MULTI_PLAYER = 'multi-player'
 
 // Ball
 export const BALL_RADIUS = 16

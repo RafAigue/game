@@ -1,12 +1,12 @@
 import { React, useState, useRef, useEffect } from 'react'
-import { CANVAS_WIDTH, CANVAS_HEIGHT, PAD_WIDTH, PILL_SPEED } from './constants'
+import { CANVAS_WIDTH, CANVAS_HEIGHT, PAD_WIDTH, PILL_SPEED } from '../../constants'
 import Pad from './Pad'
 import Ball from './Ball'
 import Pill from './Pill'
 import { Modal } from './Modal'
 import './Board.css'
 
-export default function Board() {
+export default function SinglePlayer({ handleGameSelect }) {
     const canvasRef = useRef(null)
     const [score, setScore] = useState(0.00)
     const [maxScore, setMaxScore] = useState(0.00)
@@ -121,6 +121,7 @@ export default function Board() {
                 </main>
             ) : (
                 <Modal
+                    handleGameSelect={handleGameSelect}
                     score={score}
                     maxScore={maxScore}
                     resetGame={resetGame}
