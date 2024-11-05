@@ -1,4 +1,4 @@
-export const Modal = ({ handleGameSelect, score, maxScore, resetGame }) => {
+export default function Modal({ handleGameSelect, score, maxScore, resetGame }) {
     const handleGameSelectorClick = () => {
         // Smooth fade out
         const overlay = document.querySelector('.modal-overlay')

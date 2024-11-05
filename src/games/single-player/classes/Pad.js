@@ -1,4 +1,4 @@
-import { PAD_Y, PAD_WIDTH, PAD_HEIGHT, CANVAS_WIDTH, PAD_COLOR, PAD_STEP_ANGLE } from '../../constants'
+import { PAD_Y, PAD_WIDTH, PAD_HEIGHT, CANVAS_WIDTH, PAD_COLOR, PAD_STEP_ANGLE } from '../../../constants'
 
 export default class Pad {
     constructor() {

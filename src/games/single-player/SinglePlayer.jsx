@@ -1,10 +1,10 @@
 import { React, useState, useRef, useEffect } from 'react'
 import { CANVAS_WIDTH, CANVAS_HEIGHT, PAD_WIDTH, PILL_SPEED } from '../../constants'
-import Pad from './Pad'
-import Ball from './Ball'
-import Pill from './Pill'
-import { Modal } from './Modal'
-import './Board.css'
+import Pad from './classes/Pad'
+import Ball from './classes/Ball'
+import Pill from './classes/Pill'
+import Modal from './Modal'
+import './SinglePlayer.css'
 
 export default function SinglePlayer({ handleGameSelect }) {
     const canvasRef = useRef(null)
