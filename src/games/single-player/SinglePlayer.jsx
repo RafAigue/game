@@ -9,7 +9,7 @@ import './Board.css'
 export default function SinglePlayer({ handleGameSelect }) {
     const canvasRef = useRef(null)
     const [score, setScore] = useState(0.00)
-    const [maxScore, setMaxScore] = useState(0.00)
+    const [maxScore, setMaxScore] = useState(Number(localStorage.getItem('SinglePlayerMaxScore')) || 0.00)
     const timerRef = useRef(null)
     const startTimeRef = useRef(null)
     const [gameRestart, setGameRestart] = useState(true)
@@ -36,6 +36,7 @@ export default function SinglePlayer({ handleGameSelect }) {
         const newMaxScore = Math.max(finalScore, maxScore)
         setScore(finalScore)
         setMaxScore(newMaxScore)
+        localStorage.setItem('SinglePlayerMaxScore', newMaxScore)
     }
 
     useEffect(() => {
