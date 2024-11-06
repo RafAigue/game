@@ -1,13 +1,11 @@
 import { WebSocket, WebSocketServer } from 'ws'
 
-const wss = new WebSocketServer({ host: '192.168.0.193', port: 8080 })
-
-const generateUserId = () => {
-  return `user-${Date.now()}-${Math.floor(Math.random() * 1000)}`
-}
+const WS_HOST = '192.168.0.193'
+const WS_PORT = 8080
+const wss = new WebSocketServer({ host: WS_HOST, port: WS_PORT })
 
 wss.on('connection', (ws) => {
-  const userId = generateUserId()
+  const userId = `user-${Date.now()}-${Math.floor(Math.random() * 1000)}`
   console.log('New client connected with ID:', userId)
   ws.send(JSON.stringify({ type: 'init', userId }))
 
@@ -35,4 +33,4 @@ wss.on('connection', (ws) => {
   })
 })
 
-console.log('WebSocket server is running on ws://192.168.0.193:8080')
+console.log(`WebSocket server is running on ws://${WS_HOST}:${WS_PORT}`)

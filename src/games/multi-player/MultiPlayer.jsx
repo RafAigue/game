@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './MultiPlayer.css'
+import { WS_HOST, WS_PORT } from '../../constants'
 
 export default function MultiPlayer() {
   const [messages, setMessages] = useState([])
@@ -7,10 +8,10 @@ export default function MultiPlayer() {
   const [ws, setWs] = useState(null)
 
   useEffect(() => {
-    const socket = new WebSocket('ws://192.168.0.193:8080')
+    const socket = new WebSocket(`ws://${WS_HOST}:${WS_PORT}`)
     setWs(socket)
   
-    socket.onopen = () => console.log('Connected to WebSocket')
+    socket.onopen
     
     socket.onmessage = (event) => {
       try {
@@ -27,7 +28,7 @@ export default function MultiPlayer() {
       }
     }
 
-    socket.onclose = () => console.log('Disconnected from WebSocket')
+    socket.onclose
 
     return () => socket.close()
   }, [])
@@ -57,7 +58,7 @@ export default function MultiPlayer() {
             key={index} 
             className={`message-item ${msg.userId === userId ? 'message-own' : 'message-other'}`}
           >
-            <div className="message-user-id">Usuario {msg.userId}</div>
+            <div className="message-user-id">User: {msg.userId}</div>
             {msg.message}
           </li>
         ))}
