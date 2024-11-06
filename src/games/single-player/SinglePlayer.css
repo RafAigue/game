@@ -1,3 +1,7 @@
+#board {
+    background-color: #1e1e1e;
+  }
+
 .game-container {
     display: flex;
     justify-content: center;
@@ -26,6 +30,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    opacity: 1;
+    transition: opacity 0.8s ease-in-out;
+}
+  
+.modal-overlay.fade-out {
+    opacity: 0;
 }
 
 .modal {
@@ -58,6 +68,7 @@
     border-radius: 0.5rem;
     cursor: pointer;
     transition: background-color 0.2s;
+    margin: 0.5rem;
 }
 
 .modal-button:hover {
@@ -71,7 +82,7 @@
     }
     50% {
         opacity: 0.5;
-        transform: translateY(100px);
+        transform: translateY(-20px);
     }
     100% {
         opacity: 1;
@@ -85,4 +96,26 @@
 
 .modal-title.win {
     color: #00bb00;
+}
+
+.countdown {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 5rem;
+    color: white;
+    z-index: 1;
+    animation: countdownPulse 1s ease-in-out infinite;
+}
+
+@keyframes countdownPulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0.1;
+    }
 }
