@@ -15,6 +15,8 @@ export const CANVAS_HEIGHT = canvasHeight < 720 ? 720 : canvasHeight
 // Games
 export const GAME_SINGLE_PLAYER = 'single-player'
 export const GAME_MULTI_PLAYER = 'multi-player'
+export const GAME_SINGLE_PLAYER_DESCRIPTION = 'Hold as much as you can!'
+export const GAME_MULTI_PLAYER_DESCRIPTION = 'Beat your friends!'
 
 // Ball
 export const BALL_RADIUS = 16

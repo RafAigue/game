@@ -16,6 +16,8 @@ export default function SinglePlayer({ handleGameSelect }) {
     const [isGameRunning, setIsGameRunning] = useState(true)
     let pill = new Pill()
     const pillIntervalRef = useRef(null)
+    const [countdown, setCountdown] = useState(3)
+    const [gameStarted, setGameStarted] = useState(false)
 
     let animationFrameId
 
@@ -23,7 +25,8 @@ export default function SinglePlayer({ handleGameSelect }) {
         setScore(0.00)
         setGameRestart(prev => !prev)
         setIsGameRunning(true)
-        startTimeRef.current = Date.now()
+        setGameStarted(false)
+        setCountdown(3)
         pill = new Pill()
     }
 
@@ -39,6 +42,20 @@ export default function SinglePlayer({ handleGameSelect }) {
         localStorage.setItem('SinglePlayerMaxScore', newMaxScore)
     }
 
+    // Countdown
+    useEffect(() => {
+        if (countdown > 0) {
+            const timer = setTimeout(() => {
+                setCountdown(prev => prev - 1)
+            }, 1000)
+            return () => clearTimeout(timer)
+        } else if (countdown === 0 && !gameStarted) {
+            setGameStarted(true)
+            startTimeRef.current = Date.now()
+        }
+    }, [countdown, gameStarted])
+
+    // Game
     useEffect(() => {
         const canvas = canvasRef.current
         if (!canvas) return
@@ -98,9 +115,12 @@ export default function SinglePlayer({ handleGameSelect }) {
             cancelAnimationFrame(animationFrameId)
             clearInterval(pillIntervalRef.current)
         }
-    }, [gameRestart, isGameRunning])
+    }, [gameRestart, isGameRunning, gameStarted])
 
+    // Timer
     useEffect(() => {
+        if (!gameStarted) return
+
         startTimeRef.current = Date.now()
         timerRef.current = setInterval(() => {
             const elapsedTime = (Date.now() - startTimeRef.current) / 1000
@@ -108,7 +128,7 @@ export default function SinglePlayer({ handleGameSelect }) {
         }, 10)
 
         return () => clearInterval(timerRef.current)
-    }, [gameRestart])
+    }, [gameRestart, gameStarted])
 
     const game = <canvas id='board' ref={canvasRef} height={CANVAS_HEIGHT} width={CANVAS_WIDTH} />
 
@@ -116,9 +136,13 @@ export default function SinglePlayer({ handleGameSelect }) {
         <div className='game-container'>
             {isGameRunning ? (
                 <main className='game-main'>
-                    <h2 className='score'>SCORE: {score.toFixed(2)}</h2>
-                    <h2 className='max-score'>MAX SCORE: {maxScore.toFixed(2)}</h2>
-                    {game}
+                    {!gameStarted ? <h1 className='countdown'>{countdown}</h1>
+                    :
+                    <>
+                        <h2 className='score'>SCORE: {score.toFixed(2)}</h2>
+                        <h2 className='max-score'>MAX SCORE: {maxScore.toFixed(2)}</h2>
+                        {game}
+                    </>}
                 </main>
             ) : (
                 <Modal
