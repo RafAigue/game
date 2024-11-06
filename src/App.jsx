@@ -2,6 +2,7 @@ import './App.css'
 import { useState } from 'react'
 import Welcome from './Welcome'
 import SinglePlayer from './games/single-player/SinglePlayer'
+import MultiPlayer from './games/multi-player/MultiPlayer'
 import Summary from './Summary'
 import { GAME_SINGLE_PLAYER, GAME_MULTI_PLAYER } from './constants'
 import countdownSound from './assets/sounds/countdown.mp3'
@@ -55,7 +56,7 @@ function App() {
             { !isWelcome && <Welcome handleWelcome={handleWelcome} /> }
             { !game && isWelcome && gameSelector() }
             { game === GAME_SINGLE_PLAYER && <SinglePlayer handlePlayGame={handlePlayGame} /> }
-            { game === GAME_MULTI_PLAYER && <h1 style={{ color: '#dedede' }}>Multi Player</h1> }
+            { game === GAME_MULTI_PLAYER && <MultiPlayer /> }
         </div>
     )
 }
