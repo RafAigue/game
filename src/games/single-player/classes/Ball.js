@@ -1,4 +1,5 @@
 import { BALL_RADIUS, BALL_INITIAL_SPEED, CANVAS_WIDTH, CANVAS_HEIGHT, PAD_SPEED, BALL_COLOR } from '../../../constants'
+import winSound from '../../../assets/sounds/wink.mp3'
 
 export default class Ball {
     constructor() {
@@ -56,6 +57,7 @@ export default class Ball {
         if (this.posY + BALL_RADIUS >= pad.y && this.posX + BALL_RADIUS >= pad.x && this.posX - BALL_RADIUS <= pad.x + pad.width) {
             this.direction.DOWN = false
             this.speed += PAD_SPEED
+            new Audio(winSound).play()
 
             // Ball hits the limits of the pad
             if (this.posX < pad.x + pad.stepAngle) { // Left side

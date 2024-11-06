@@ -5,8 +5,11 @@ import Ball from './classes/Ball'
 import Pill from './classes/Pill'
 import Modal from './Modal'
 import './SinglePlayer.css'
+import pillSound from '../../assets/sounds/coin.mp3'
+import loseSound from '../../assets/sounds/dead.mp3'
+import countdownSound from '../../assets/sounds/countdown.mp3'
 
-export default function SinglePlayer({ handleGameSelect }) {
+export default function SinglePlayer({ handlePlayGame }) {
     const canvasRef = useRef(null)
     const [score, setScore] = useState(0.00)
     const [maxScore, setMaxScore] = useState(Number(localStorage.getItem('SinglePlayerMaxScore')) || 0.00)
@@ -14,14 +17,15 @@ export default function SinglePlayer({ handleGameSelect }) {
     const startTimeRef = useRef(null)
     const [gameRestart, setGameRestart] = useState(true)
     const [isGameRunning, setIsGameRunning] = useState(true)
-    let pill = new Pill()
     const pillIntervalRef = useRef(null)
     const [countdown, setCountdown] = useState(3)
     const [gameStarted, setGameStarted] = useState(false)
 
+    let pill = new Pill()
     let animationFrameId
 
     const resetGame = () => {
+        new Audio(countdownSound).play()
         setScore(0.00)
         setGameRestart(prev => !prev)
         setIsGameRunning(true)
@@ -31,6 +35,7 @@ export default function SinglePlayer({ handleGameSelect }) {
     }
 
     const handleGameOver = () => {
+        new Audio(loseSound).play()
         clearInterval(timerRef.current)
         setIsGameRunning(false)
         cancelAnimationFrame(animationFrameId)
@@ -54,6 +59,19 @@ export default function SinglePlayer({ handleGameSelect }) {
             startTimeRef.current = Date.now()
         }
     }, [countdown, gameStarted])
+
+    // Timer
+    useEffect(() => {
+        if (!gameStarted) return
+
+        startTimeRef.current = Date.now()
+        timerRef.current = setInterval(() => {
+            const elapsedTime = (Date.now() - startTimeRef.current) / 1000
+            setScore(Number(elapsedTime.toFixed(2)))
+        }, 10)
+
+        return () => clearInterval(timerRef.current)
+    }, [gameRestart, gameStarted])
 
     // Game
     useEffect(() => {
@@ -79,6 +97,7 @@ export default function SinglePlayer({ handleGameSelect }) {
             const mouseX = event.clientX - rect.left
             const mouseY = event.clientY - rect.top
             if (pill?.isClicked(mouseX, mouseY)) {
+                new Audio(pillSound).play()
                 ball.speed -= PILL_SPEED
                 pill = null
                 clearInterval(pillIntervalRef.current)
@@ -117,19 +136,6 @@ export default function SinglePlayer({ handleGameSelect }) {
         }
     }, [gameRestart, isGameRunning, gameStarted])
 
-    // Timer
-    useEffect(() => {
-        if (!gameStarted) return
-
-        startTimeRef.current = Date.now()
-        timerRef.current = setInterval(() => {
-            const elapsedTime = (Date.now() - startTimeRef.current) / 1000
-            setScore(Number(elapsedTime.toFixed(2)))
-        }, 10)
-
-        return () => clearInterval(timerRef.current)
-    }, [gameRestart, gameStarted])
-
     const game = <canvas id='board' ref={canvasRef} height={CANVAS_HEIGHT} width={CANVAS_WIDTH} />
 
     return (
@@ -146,7 +152,7 @@ export default function SinglePlayer({ handleGameSelect }) {
                 </main>
             ) : (
                 <Modal
-                    handleGameSelect={handleGameSelect}
+                    handlePlayGame={handlePlayGame}
                     score={score}
                     maxScore={maxScore}
                     resetGame={resetGame}

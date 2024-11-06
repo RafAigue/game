@@ -1,11 +1,11 @@
-export default function Modal({ handleGameSelect, score, maxScore, resetGame }) {
+export default function Modal({ handlePlayGame, score, maxScore, resetGame }) {
     const handleGameSelectorClick = () => {
         // Smooth fade out
         const overlay = document.querySelector('.modal-overlay')
         overlay.classList.add('fade-out')
         
         setTimeout(() => {
-            handleGameSelect(null)
+            handlePlayGame(null)
         }, 800)
     }
 
