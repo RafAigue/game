@@ -1,11 +1,12 @@
-import { PAD_Y, PAD_WIDTH, PAD_HEIGHT, CANVAS_WIDTH, PAD_COLOR } from './constants'
+import { PAD_Y, PAD_WIDTH, PAD_HEIGHT, CANVAS_WIDTH, PAD_COLOR, PAD_STEP_ANGLE } from '../../../constants'
 
-export class Pad {
+export default class Pad {
     constructor() {
         this.x = CANVAS_WIDTH / 2
         this.y = PAD_Y
         this.width = PAD_WIDTH
         this.height = PAD_HEIGHT
+        this.stepAngle = PAD_STEP_ANGLE
     }
 
     draw(ctx) {
