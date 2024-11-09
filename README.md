@@ -30,7 +30,14 @@ npm run dev --host
 Copy the IP address of the host:
 **192.168.X.X**
 
-Open the files ***src/constants.js*** and ***src/games/multi-player/Server.js*** and change the IP address to the one of the host to the **WS_HOST** constant.
+Add this variables to the ***.env*** file:
+
+````bash
+VITE_WS_HOST=192.168.X.X
+VITE_WS_PORT=8080
+````
+
+Open the file ***src/games/multi-player/Server.js*** and change the IP address to the **WS_HOST**.
 
 In the host machine, open a terminal and run the server for multi player game:
 
@@ -40,6 +47,6 @@ node Server.js
 ```
 
 Open the game in your browser:
-**__WS_HOST__:5173**
+**__192.168.X.X__:5173**
 
 **ENJOY!**

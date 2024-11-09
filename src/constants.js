@@ -36,10 +36,6 @@ export const PAD_COLOR = GREEN
 export const PILL_RADIUS = 16
 export const PILL_SPEED = 2
 
-// WebSocket
-export const WS_HOST = '192.168.0.193'
-export const WS_PORT = 8080
-
 // Server messages
 export const MSG_TYPE_CHAT = 'chat'
 export const MSG_TYPE_GAME_BOOL_RESP = 'gameBoolean'
