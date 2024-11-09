@@ -1,13 +1,12 @@
 #board {
     background-color: #1e1e1e;
-  }
+}
 
 .game-container {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 98vh;
-    background: radial-gradient(circle at center, #000000 0%, #ffffff 100%);
 }
 
 .game-main {
@@ -16,8 +15,13 @@
 
 .score {
     font-size: 2rem;
-    color: #000000;
+    color: #e0e0e0;
     margin-bottom: 1rem;
+}
+
+.max-score {
+    font-size: 1rem;
+    color: #e0e0e0;
 }
 
 .modal-overlay {
