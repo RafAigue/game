@@ -12,13 +12,15 @@ export default class BooleanGame {
         this.scores = {
             player1: {
                 correctAnswers: 0,
-                totalAnswerTime: 0,
-                unanswered: 0
+                totalAnswerTime: 0.00,
+                unanswered: 0,
+                winner: null
             },
             player2: {
                 correctAnswers: 0,
-                totalAnswerTime: 0,
-                unanswered: 0
+                totalAnswerTime: 0.00,
+                unanswered: 0,
+                winner: null
             }
         }
     }
@@ -70,32 +72,37 @@ export default class BooleanGame {
         if (currentCorrectAnswer === player1Answer.response && currentCorrectAnswer === player2Answer.response) {
             console.log('DRAW!')
             this.scores.player1.correctAnswers ++
-            this.scores.player1.totalAnswerTime += player1Answer.timeToAnswer
+            this.scores.player1.totalAnswerTime += Number(player1Answer.timeToAnswer)
             this.scores.player2.correctAnswers ++
-            this.scores.player2.totalAnswerTime += player2Answer.timeToAnswer
+            this.scores.player2.totalAnswerTime += Number(player2Answer.timeToAnswer)
         }
         else if (currentCorrectAnswer === player1Answer.response && currentCorrectAnswer !== player2Answer.response) {
             console.log('Player 1 wins!')
             this.scores.player1.correctAnswers ++
-            this.scores.player1.totalAnswerTime += player1Answer.timeToAnswer
-            if (player2Answer.response === null) {
-                this.scores.player2.totalAnswerTime += 2
-                this.scores.player2.unanswered ++
-            }
+            this.scores.player1.totalAnswerTime += Number(player1Answer.timeToAnswer)
         }
         else if (currentCorrectAnswer !== player1Answer.response && currentCorrectAnswer === player2Answer.response) {
             console.log('Player 2 wins!')
             this.scores.player2.correctAnswers ++
-            this.scores.player2.totalAnswerTime += player2Answer.timeToAnswer
-            if (player1Answer.response === null) {
-                this.scores.player1.totalAnswerTime += 2
-                this.scores.player1.unanswered ++
-            }
+            this.scores.player2.totalAnswerTime += Number(player2Answer.timeToAnswer)
         }
-        else if (currentCorrectAnswer !== player1Answer.response && currentCorrectAnswer !== player2Answer.response) console.log('BOTH FAILED!')
-        console.log('------------------')
+        else if (currentCorrectAnswer !== player1Answer.response && currentCorrectAnswer !== player2Answer.response) {
+            console.log('BOTH FAILED!')
+        }
+
+        if (player2Answer.response === null) {
+            this.scores.player2.totalAnswerTime += 10.00
+            this.scores.player2.unanswered ++
+        }
+        if (player1Answer.response === null) {
+            this.scores.player1.totalAnswerTime += 10.00
+            this.scores.player1.unanswered ++
+        }
 
         this.currentQuestion ++
+
+        console.log(this.scores)
+        console.log('------------------')
 
         if (this.currentQuestion === this.questions.length) this.notifyWinner()
         else this.sendQuestion()
@@ -103,6 +110,28 @@ export default class BooleanGame {
 
     notifyWinner() {
         console.log('GAME OVER')
+
+        if (this.scores.player1.correctAnswers > this.scores.player2.correctAnswers ||
+            ((this.scores.player1.correctAnswers === this.scores.player2.correctAnswers) && (this.scores.player1.totalAnswerTime < this.scores.player2.totalAnswerTime))
+        ) {
+            this.scores.player1.winner = true
+            this.scores.player2.winner = false
+        } else {
+            this.scores.player1.winner = false
+            this.scores.player2.winner = true
+        }
+
         console.log(this.scores)
+
+        /*this.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({
+                    type: 'notifyWinner',
+                    data: {
+                        scores: this.scores
+                    },
+                }))
+            }
+        })*/
     }
 }

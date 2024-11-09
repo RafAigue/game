@@ -120,7 +120,7 @@ export default function MultiPlayer() {
         <h3 className='mp-question-category'>{question.category}</h3>
         <strong>{question.difficulty}</strong>
         <p>{question.question}</p>
-        { countdown > 0 && <p>{countdown.toFixed(2)}</p> }
+        { countdown > 0 ? <p>{countdown.toFixed(2)}</p> : <p>Waiting for the other player...</p> }
         <div className='answer-buttons'>
           <button 
             disabled={disableAnswers} 
