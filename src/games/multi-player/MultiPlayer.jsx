@@ -11,6 +11,7 @@ export default function MultiPlayer() {
   const [question, setQuestion] = useState([])
   const [messages, setMessages] = useState([])
   const [counter, setCounter] = useState(0)
+  const [answer, setAnswer] = useState(null)
   const [disableAnswers, setDisableAnswers] = useState(false)
 
   useEffect(() => {
@@ -32,6 +33,7 @@ export default function MultiPlayer() {
           let question = data.data.question
           question.question = question.question.replace(/&quot;/g, '"')
           setQuestion(data.data.question)
+          setAnswer(null)
           setCounter(prev => prev + 1)
           setDisableAnswers(false)
         }
@@ -58,24 +60,24 @@ export default function MultiPlayer() {
       return (
         <>
           <button 
-            className="answer-button"
+            className='answer-button'
             onClick={() => sendMessage('Player answered!')}
           >
             Send
           </button>
           <button 
-            className="answer-button"
+            className='answer-button'
             onClick={() => ws.close()}
           >
             Disconnect
           </button>
-          <ul className="messages-list">
+          <ul className='messages-list'>
             {messages.map((msg, index) => (
               <li 
                 key={index} 
                 className={`message-item ${msg.userId === userId ? 'message-own' : 'message-other'}`}
               >
-                <div className="message-user-id">User: {msg.userId}</div>
+                <div className='message-user-id'>User: {msg.userId}</div>
                 {msg.message}
               </li>
             ))}
@@ -85,13 +87,12 @@ export default function MultiPlayer() {
     }
   }
 
-  const sendResponse = (response) => {
+  const sendResponse = () => {
     if (ws) {
-      // Controlar si no responde en un plazo de tiempo
       ws.send(JSON.stringify({
         userId,
         type: MSG_TYPE_GAME_BOOL_RESP,
-        response
+        response: answer
       }))
       setDisableAnswers(true)
     }
@@ -100,23 +101,44 @@ export default function MultiPlayer() {
   const game = () => {
     return (
       <main className='mp-game'>
-        <h1 className='mp-game-title'>Quiz ({counter})</h1>
+        <h1 className='mp-game-title'>Quiz</h1>
+        <h2>Question {counter}</h2>
         <h3 className='mp-question-category'>{question.category}</h3>
         <strong>{question.difficulty}</strong>
         <p>{question.question}</p>
         <p>{question.correct_answer}</p>
-        <div>
-          <button disabled={disableAnswers} className='answer-button answer-true' onClick={() => sendResponse('True')}>True</button>
-          <button disabled={disableAnswers} className='answer-button answer-false' onClick={() => sendResponse('False')}>False</button>
+        <div className='answer-buttons'>
+          <button 
+            disabled={disableAnswers} 
+            className={`answer-button ${answer === 'True' ? 'selected' : ''}`} 
+            onClick={() => setAnswer('True')}
+          >
+            True
+          </button>
+          <button 
+            disabled={disableAnswers} 
+            className={`answer-button ${answer === 'False' ? 'selected' : ''}`} 
+            onClick={() => setAnswer('False')}
+          >
+            False
+          </button>
         </div>
+        {
+          (answer && !disableAnswers) &&
+          <button
+            className='send-button'
+            onClick={() => sendResponse()}>
+              Send
+          </button>
+        }
       </main>
     )
   }
 
   return (
-    <div className="mp-game-container">
+    <div className='mp-game-container'>
       {
-        readyToPlay ? game() : <h1 id='waiting'>Waiting for the other player...</h1>
+        readyToPlay ? game() : <h1>Waiting for the other player...</h1>
       }
     </div>
   )
