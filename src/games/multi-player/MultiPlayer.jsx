@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import './MultiPlayer.css'
-import { WS_HOST, WS_PORT, MSG_TYPE_CHAT, MSG_TYPE_GAME_BOOL_RESP } from '../../constants'
+import { MSG_TYPE_CHAT, MSG_TYPE_GAME_BOOL_RESP } from '../../constants'
+const host = import.meta.env.VITE_WS_HOST
+const port = import.meta.env.VITE_WS_PORT
 
 export default function MultiPlayer() {
   const [ws, setWs] = useState(null)
@@ -12,7 +14,7 @@ export default function MultiPlayer() {
   const [disableAnswers, setDisableAnswers] = useState(false)
 
   useEffect(() => {
-    const socket = new WebSocket(`ws://${WS_HOST}:${WS_PORT}`)
+    const socket = new WebSocket(`ws://${host}:${port}`)
 
     socket.onopen = () => setWs(socket)
 

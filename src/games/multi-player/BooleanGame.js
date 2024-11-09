@@ -87,7 +87,7 @@ export default class BooleanGame {
 
         this.currentQuestion ++
 
-        if (this.currentQuestion === this.questions.length) notifyWinner()
+        if (this.currentQuestion === this.questions.length) this.notifyWinner()
         else this.sendQuestion()
     }
 
