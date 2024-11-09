@@ -12,11 +12,13 @@ export default class BooleanGame {
         this.scores = {
             player1: {
                 correctAnswers: 0,
-                totalAnswerTime: 0
+                totalAnswerTime: 0,
+                unanswered: 0
             },
             player2: {
                 correctAnswers: 0,
-                totalAnswerTime: 0
+                totalAnswerTime: 0,
+                unanswered: 0
             }
         }
     }
@@ -68,19 +70,27 @@ export default class BooleanGame {
         if (currentCorrectAnswer === player1Answer.response && currentCorrectAnswer === player2Answer.response) {
             console.log('DRAW!')
             this.scores.player1.correctAnswers ++
-            this.scores.player1.totalAnswerTime += player1Answer.timeResponse
+            this.scores.player1.totalAnswerTime += player1Answer.timeToAnswer
             this.scores.player2.correctAnswers ++
-            this.scores.player2.totalAnswerTime += player2Answer.timeResponse
+            this.scores.player2.totalAnswerTime += player2Answer.timeToAnswer
         }
         else if (currentCorrectAnswer === player1Answer.response && currentCorrectAnswer !== player2Answer.response) {
             console.log('Player 1 wins!')
             this.scores.player1.correctAnswers ++
-            this.scores.player1.totalAnswerTime += player1Answer.timeResponse
+            this.scores.player1.totalAnswerTime += player1Answer.timeToAnswer
+            if (player2Answer.response === null) {
+                this.scores.player2.totalAnswerTime += 2
+                this.scores.player2.unanswered ++
+            }
         }
         else if (currentCorrectAnswer !== player1Answer.response && currentCorrectAnswer === player2Answer.response) {
             console.log('Player 2 wins!')
             this.scores.player2.correctAnswers ++
-            this.scores.player2.totalAnswerTime += player2Answer.timeResponse
+            this.scores.player2.totalAnswerTime += player2Answer.timeToAnswer
+            if (player1Answer.response === null) {
+                this.scores.player1.totalAnswerTime += 2
+                this.scores.player1.unanswered ++
+            }
         }
         else if (currentCorrectAnswer !== player1Answer.response && currentCorrectAnswer !== player2Answer.response) console.log('BOTH FAILED!')
         console.log('------------------')
