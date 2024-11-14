@@ -30,7 +30,7 @@ wss.on('connection', async (ws) => {
         game.setPlayerResponse({
           userId: messageData.userId,
           response: messageData.response,
-          timeResponse: Date.now()
+          timeToAnswer: messageData.timeToAnswer
         })
       } else {
         console.error('Error: Game not initialized')

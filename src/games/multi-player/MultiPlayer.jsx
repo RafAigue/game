@@ -13,6 +13,18 @@ export default function MultiPlayer() {
   const [counter, setCounter] = useState(0)
   const [answer, setAnswer] = useState(null)
   const [disableAnswers, setDisableAnswers] = useState(false)
+  const [countdown, setCountdown] = useState(null)
+  const [scores, setScores] = useState(null)
+  const [winner, setWinner] = useState(null)
+  const [loser, setLoser] = useState(null)
+
+  useEffect(() => {
+    if (userId !== null && scores) {
+      setWinner(scores.winner)
+      setLoser(scores.loser)
+      setReadyToPlay(null)
+    }
+  }, [userId, scores])
 
   useEffect(() => {
     const socket = new WebSocket(`ws://${host}:${port}`)
@@ -26,16 +38,19 @@ export default function MultiPlayer() {
         if (data.type === 'init') {
           setUserId(data.userId)
         } else if (data.type === 'chat') {
-          const messageText = {userId: data.data.userId, message: data.data.message}
+          const messageText = { userId: data.data.userId, message: data.data.message }
           setMessages((prevMessages) => [...prevMessages, messageText])
         } else if (data.type === 'newQuestion') {
-          !readyToPlay && setReadyToPlay(true)
+          setReadyToPlay(true)
           let question = data.data.question
           question.question = question.question.replace(/&quot;/g, '"')
+          setCountdown(10)
           setQuestion(data.data.question)
           setAnswer(null)
           setCounter(prev => prev + 1)
           setDisableAnswers(false)
+        } else if (data.type === 'notifyWinner') {
+          setScores(data.data.scores)
         }
       } catch (error) {
         console.error('Error parsing message:', error)
@@ -44,6 +59,16 @@ export default function MultiPlayer() {
 
     socket.onclose = () => setWs(socket)
   }, [])
+
+  // Countdown
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown(prev => prev.toFixed(2) - 0.01)
+      }, 10)
+      return () => clearTimeout(timer)
+    } else if (countdown === 0) sendResponse()
+  }, [countdown])
 
   const sendMessage = (message) => {
     if (ws) {
@@ -92,9 +117,11 @@ export default function MultiPlayer() {
       ws.send(JSON.stringify({
         userId,
         type: MSG_TYPE_GAME_BOOL_RESP,
-        response: answer
+        response: answer,
+        timeToAnswer: 10 - countdown
       }))
       setDisableAnswers(true)
+      setCountdown(null)
     }
   }
 
@@ -106,7 +133,7 @@ export default function MultiPlayer() {
         <h3 className='mp-question-category'>{question.category}</h3>
         <strong>{question.difficulty}</strong>
         <p>{question.question}</p>
-        <p>{question.correct_answer}</p>
+        { countdown > 0 ? <p>{countdown.toFixed(2)}</p> : <p>Waiting for the other player...</p> }
         <div className='answer-buttons'>
           <button 
             disabled={disableAnswers} 
@@ -135,11 +162,32 @@ export default function MultiPlayer() {
     )
   }
 
+  const winLose = () => {
+    let winnerOrLoser = 'You WIN!'
+    let correctAnswers = winner.correctAnswers
+    let unanswered = winner.unanswered
+    let totalAnswerTime = winner.totalAnswerTime
+    if (winner.id !== userId) {
+      winnerOrLoser = 'You LOSE!'
+      correctAnswers = loser.correctAnswers
+      unanswered = loser.unanswered
+      totalAnswerTime = loser.totalAnswerTime
+    }
+    return (
+      <div>
+        <h1>{winnerOrLoser}</h1>
+        <p>{correctAnswers} correct answers ({unanswered} unanswered)</p>
+        <strong>{totalAnswerTime.toFixed(2)} total time</strong>
+      </div>
+    )
+  }
+
   return (
     <div className='mp-game-container'>
-      {
-        readyToPlay ? game() : <h1>Waiting for the other player...</h1>
-      }
+      <h2>User ID: {userId}</h2>
+      { readyToPlay === false && <h1>Waiting for the other player...</h1> }
+      { readyToPlay && game() }
+      { winner !== null && winLose() }
     </div>
   )
 }
