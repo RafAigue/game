@@ -11,18 +11,22 @@ export default class BooleanGame {
         this.currentQuestion = 0
         this.scores = {
             player1: {
+                id: players[0],
                 correctAnswers: 0,
-                totalAnswerTime: 0
+                totalAnswerTime: 0.00,
+                unanswered: 0
             },
             player2: {
+                id: players[1],
                 correctAnswers: 0,
-                totalAnswerTime: 0
+                totalAnswerTime: 0.00,
+                unanswered: 0
             }
         }
     }
 
     async getQuestions() {
-        const response = await fetch('https://opentdb.com/api.php?amount=10&type=boolean')
+        const response = await fetch('https://opentdb.com/api.php?amount=5&type=boolean')
         const resp = await response.json()
         const tmp = resp.results.map((question) => {
             delete question.incorrect_answers
@@ -37,8 +41,7 @@ export default class BooleanGame {
                 client.send(JSON.stringify({
                     type: 'newQuestion',
                     data: {
-                        question: this.questions[this.currentQuestion],
-                        currentQuestion: this.currentQuestion
+                        question: this.questions[this.currentQuestion]
                     },
                 }))
             }
@@ -46,7 +49,6 @@ export default class BooleanGame {
     }
 
     setPlayerResponse(response) {
-        console.log(response)
         this.responses.push(response)
         let numResponses = this.responses.length
         if (this.responses.length === 2) {
@@ -56,34 +58,28 @@ export default class BooleanGame {
     }
 
     validateRoundWinner(firstAnswer, secondAnswer) {
-        console.log(this.currentQuestion)
         let player1Answer = firstAnswer
         let player2Answer = secondAnswer
         if (firstAnswer.userId !== this.player1) {
             player1Answer = secondAnswer
             player2Answer = firstAnswer
         }
-
         let currentCorrectAnswer = this.questions[this.currentQuestion].correct_answer
-        if (currentCorrectAnswer === player1Answer.response && currentCorrectAnswer === player2Answer.response) {
-            console.log('DRAW!')
-            this.scores.player1.correctAnswers ++
-            this.scores.player1.totalAnswerTime += player1Answer.timeResponse
-            this.scores.player2.correctAnswers ++
-            this.scores.player2.totalAnswerTime += player2Answer.timeResponse
+
+        currentCorrectAnswer === player1Answer.response && this.scores.player1.correctAnswers ++
+        currentCorrectAnswer === player2Answer.response && this.scores.player2.correctAnswers ++
+
+        this.scores.player1.totalAnswerTime += Number(player1Answer.timeToAnswer)
+        this.scores.player2.totalAnswerTime += Number(player2Answer.timeToAnswer)
+
+        if (player2Answer.response === null) {
+            this.scores.player2.totalAnswerTime += 10.00
+            this.scores.player2.unanswered ++
         }
-        else if (currentCorrectAnswer === player1Answer.response && currentCorrectAnswer !== player2Answer.response) {
-            console.log('Player 1 wins!')
-            this.scores.player1.correctAnswers ++
-            this.scores.player1.totalAnswerTime += player1Answer.timeResponse
+        if (player1Answer.response === null) {
+            this.scores.player1.totalAnswerTime += 10.00
+            this.scores.player1.unanswered ++
         }
-        else if (currentCorrectAnswer !== player1Answer.response && currentCorrectAnswer === player2Answer.response) {
-            console.log('Player 2 wins!')
-            this.scores.player2.correctAnswers ++
-            this.scores.player2.totalAnswerTime += player2Answer.timeResponse
-        }
-        else if (currentCorrectAnswer !== player1Answer.response && currentCorrectAnswer !== player2Answer.response) console.log('BOTH FAILED!')
-        console.log('------------------')
 
         this.currentQuestion ++
 
@@ -92,7 +88,28 @@ export default class BooleanGame {
     }
 
     notifyWinner() {
-        console.log('GAME OVER')
-        console.log(this.scores)
+        let winner = {}
+        let loser = {}
+
+        if (this.scores.player1.correctAnswers > this.scores.player2.correctAnswers ||
+            ((this.scores.player1.correctAnswers === this.scores.player2.correctAnswers) && (this.scores.player1.totalAnswerTime < this.scores.player2.totalAnswerTime))
+        ) {
+            winner = this.scores.player1
+            loser = this.scores.player2
+        } else {
+            winner = this.scores.player2
+            loser = this.scores.player1
+        }
+
+        this.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({
+                    type: 'notifyWinner',
+                    data: {
+                        scores: {winner, loser}
+                    },
+                }))
+            }
+        })
     }
 }
