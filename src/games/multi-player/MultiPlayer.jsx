@@ -4,7 +4,7 @@ import { MSG_TYPE_CHAT, MSG_TYPE_GAME_BOOL_RESP } from '../../constants'
 const host = import.meta.env.VITE_WS_HOST
 const port = import.meta.env.VITE_WS_PORT
 
-export default function MultiPlayer() {
+export default function MultiPlayer({ handlePlayGame }) {
   const [ws, setWs] = useState(null)
   const [userId, setUserId] = useState(null)
   const [readyToPlay, setReadyToPlay] = useState(false)
@@ -34,7 +34,7 @@ export default function MultiPlayer() {
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data)
-        
+
         if (data.type === 'init') {
           setUserId(data.userId)
         } else if (data.type === 'chat') {
@@ -51,6 +51,9 @@ export default function MultiPlayer() {
           setDisableAnswers(false)
         } else if (data.type === 'notifyWinner') {
           setScores(data.data.scores)
+        } else if (data.type === 'closeGame') {
+          if (ws) ws.close()
+          handlePlayGame(null)
         }
       } catch (error) {
         console.error('Error parsing message:', error)
@@ -178,8 +181,19 @@ export default function MultiPlayer() {
         <h1>{winnerOrLoser}</h1>
         <p>{correctAnswers} correct answers ({unanswered} unanswered)</p>
         <strong>{totalAnswerTime.toFixed(2)} total time</strong>
+        <button onClick={handleGameSelection}>
+            Game select
+        </button>
       </div>
     )
+  }
+
+  const handleGameSelection = () => {
+    if (ws) {
+      ws.send(JSON.stringify({
+        type: 'closeGame'
+      }))
+    }
   }
 
   return (
