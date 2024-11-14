@@ -56,7 +56,7 @@ function App() {
             { !isWelcome && <Welcome handleWelcome={handleWelcome} /> }
             { !game && isWelcome && gameSelector() }
             { game === GAME_SINGLE_PLAYER && <SinglePlayer handlePlayGame={handlePlayGame} /> }
-            { game === GAME_MULTI_PLAYER && <MultiPlayer /> }
+            { game === GAME_MULTI_PLAYER && <MultiPlayer handlePlayGame={handlePlayGame} /> }
         </div>
     )
 }

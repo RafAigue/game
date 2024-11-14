@@ -50,6 +50,20 @@ wss.on('connection', async (ws) => {
         }
       })
     }
+
+
+    if (messageData.type === 'closeGame') {
+      players = []
+      game = null
+
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({
+            type: 'closeGame'
+          }))
+        }
+      })
+    }
   })
 
   ws.on('close', () => {
@@ -58,8 +72,8 @@ wss.on('connection', async (ws) => {
 
     if (players.length < 2) {
       game = null
-    }
-  })
+      }
+    })
 })
 
 console.log(`WebSocket server is running on ws://${WS_HOST}:${WS_PORT}`)
